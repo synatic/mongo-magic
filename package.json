@@ -8,19 +8,15 @@
     "index.js"
   ],
   "scripts": {},
-  "engines": {
-    "node": ">=6"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/filepounder/mongo-magic.git"
+    "url": "git+https://github.com/synatic/mongo-magic.git"
   },
   "keywords": [
-    "filepounder",
     "mongodb"
   ],
   "author": {
-    "name": "FilePounder, Inc.",
+    "name": "FilePounder Inc",
     "url": "https://filepounder.com"
   },
   "contributors": [
@@ -34,18 +30,25 @@
     }
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/synatic/mongo-magic/issues"
+  },
+  "homepage": "https://github.com/synatic/mongo-magic#readme",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
-    "check-types": "8.0.2",
+    "check-types": "10.0.0",
     "deepcopy": "2.0.0",
-    "deepmerge": "3.2.0",
+    "deepmerge": "4.0.0",
     "merge": "1.2.1",
     "moment": "2.24.0",
-    "mongodb": "3.2.6",
+    "mongodb": "3.3.0",
     "odata-parser": "1.4.1",
     "underscore.string": "3.3.5"
   },
   "devDependencies": {
-    "async": "^2.6.1",
-    "mocha": "^5.2.0"
+    "async": "^3.1.0",
+    "mocha": "^6.2.0"
   }
 }
