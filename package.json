@@ -1,0 +1,51 @@
+{
+  "name": "@filepounder/mongo-magic",
+  "version": "0.2.3",
+  "description": "mongo magic utils",
+  "main": "index.js",
+  "files": [
+    "lib/",
+    "index.js"
+  ],
+  "scripts": {},
+  "engines": {
+    "node": ">=6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filepounder/mongo-magic.git"
+  },
+  "keywords": [
+    "filepounder",
+    "mongodb"
+  ],
+  "author": {
+    "name": "FilePounder, Inc.",
+    "url": "https://filepounder.com"
+  },
+  "contributors": [
+    {
+      "name": "Martin Naude",
+      "email": "martin@filepounder.com"
+    },
+    {
+      "name": "Thiren Bunsee",
+      "email": "thiren@filepounder.com"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "check-types": "8.0.2",
+    "deepcopy": "2.0.0",
+    "deepmerge": "3.2.0",
+    "merge": "1.2.1",
+    "moment": "2.24.0",
+    "mongodb": "3.2.6",
+    "odata-parser": "1.4.1",
+    "underscore.string": "3.3.5"
+  },
+  "devDependencies": {
+    "async": "^2.6.1",
+    "mocha": "^5.2.0"
+  }
+}
