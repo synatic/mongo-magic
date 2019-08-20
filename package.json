@@ -1,6 +1,6 @@
 {
-  "name": "@filepounder/mongo-magic",
-  "version": "0.2.3",
+  "name": "@synatic/mongo-magic",
+  "version": "0.2.4",
   "description": "mongo magic utils",
   "main": "index.js",
   "files": [
@@ -17,16 +17,16 @@
   ],
   "author": {
     "name": "FilePounder Inc",
-    "url": "https://filepounder.com"
+    "url": "https://www.synatic.com"
   },
   "contributors": [
     {
       "name": "Martin Naude",
-      "email": "martin@filepounder.com"
+      "email": "martin@synatic.com"
     },
     {
       "name": "Thiren Bunsee",
-      "email": "thiren@filepounder.com"
+      "email": "thiren@synatic.com"
     }
   ],
   "license": "MIT",
@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "check-types": "10.0.0",
-    "deepcopy": "2.0.0",
     "deepmerge": "4.0.0",
     "merge": "1.2.1",
     "moment": "2.24.0",
@@ -49,6 +48,7 @@
   },
   "devDependencies": {
     "async": "^3.1.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "clone-deep": "^4.0.1"
   }
 }

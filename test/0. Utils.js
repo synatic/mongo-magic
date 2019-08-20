@@ -1,6 +1,6 @@
 const assert = require('assert');
 const $mongodb=require('mongodb');
-const $copy=require('deepcopy');
+const $copy=require('clone-deep');
 const utils=require('../lib/utils');
 
 describe('Utils', function () {
