@@ -50,7 +50,6 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
-package/
 
 # Yarn Integrity file
 .yarn-integrity
@@ -60,6 +59,10 @@ package/
 
 # next.js build output
 .next
+
+# lock files
+yarn.lock
+package-lock.json
 
 # IDE files
 .idea
