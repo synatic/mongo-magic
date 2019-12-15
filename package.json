@@ -1,6 +1,6 @@
 {
   "name": "@synatic/mongo-magic",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "mongo magic utils",
   "main": "index.js",
   "files": [
@@ -38,11 +38,10 @@
     "node": ">=6"
   },
   "dependencies": {
-    "check-types": "10.0.0",
-    "deepmerge": "4.0.0",
-    "merge": "1.2.1",
+    "check-types": "11.0.0",
+    "deepmerge": "4.2.2",
     "moment": "2.24.0",
-    "mongodb": "3.3.0",
+    "mongodb": "3.4.0",
     "odata-parser": "1.4.1",
     "underscore.string": "3.3.5"
   },

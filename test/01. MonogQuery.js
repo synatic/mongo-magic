@@ -138,6 +138,27 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a raw query with bool', function (done) {
+            let mongoQuery = new MongoQuery({$rawQuery:{"field1.field2":{"$bool":"1"}}});
+
+            assert.deepEqual(mongoQuery.parsedQuery.query, {'field1.field2': true}, 'Invalid Raw Query');
+            done();
+        });
+
+        it('should parse a raw query with bool 2', function (done) {
+            let mongoQuery = new MongoQuery({$rawQuery:{"field1.field2":{"$bool":"false"}}});
+
+            assert.deepEqual(mongoQuery.parsedQuery.query, {'field1.field2': false}, 'Invalid Raw Query');
+            done();
+        });
+
+        it('should parse a raw query with int in array', function (done) {
+            let mongoQuery = new MongoQuery({$rawQuery:{"field":{$in:[{"$int":"1"},{"$int":"2"}]}}});
+
+            assert.deepEqual(mongoQuery.parsedQuery.query, {field:{$in:[1,2]}}, 'Invalid Raw Query');
+            done();
+        });
+
         it('should parse a raw query with int', function (done) {
             let mongoQuery = new MongoQuery({$rawQuery:{"field1.field2":{"$float":"1.2"}}});
 
