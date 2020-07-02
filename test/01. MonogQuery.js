@@ -166,6 +166,23 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a raw query with date', function (done) {
+            let mongoQuery = new MongoQuery({$rawQuery:{"$and":[{"_dateUpdated":{"$gt":{"$date":"2020-01-06"}}}]}});
+
+            assert.deepEqual(mongoQuery.parsedQuery.query, {
+                "$and": [
+                    {
+                        "_dateUpdated": {
+                            "$gt": new Date("2020-01-06T00:00:00.000Z")
+                        }
+                    }
+                ]
+            }, 'Invalid Raw Query');
+            done();
+        });
+
+
+
         it('should parse a raw query with objectId string', function (done) {
             let objectId=new $mongodb.ObjectId()
             let mongoQuery = new MongoQuery({$rawQuery:{"field1.field2":{"$objectId":objectId.toString()}}});
@@ -262,6 +279,32 @@ describe('Mongo Query', function () {
                 field3: objectId
             }, 'Invalid Query');
             done();
+        });
+    });
+
+    describe('Merge', function () {
+        it('should merge a query with no from and to', function () {
+            assert.equal(MongoQuery.mergeQuery(),null,"Invalid parse")
+        });
+
+        it('should merge a query with no from', function () {
+            assert.deepEqual(MongoQuery.mergeQuery({a:1}), {a:1},"Invalid parse")
+        });
+
+        it('should merge a query with no to', function () {
+            assert.deepEqual(MongoQuery.mergeQuery(null,{a:2}), {a:2},"Invalid parse")
+        });
+
+        it('should merge a query', function () {
+            assert.deepEqual(MongoQuery.mergeQuery({a:1},{a:2}), {$and:[{a:1},{a:2}]},"Invalid parse")
+        });
+
+        it('should merge a query', function () {
+            assert.deepEqual(MongoQuery.mergeQuery({a:2},{$and:[{a:1}]}), {$and:[{a:1},{a:2}]},"Invalid parse")
+        });
+
+        it('should merge a query with or', function () {
+            assert.deepEqual(MongoQuery.mergeQuery({a:1},{a:2},"or"), {$or:[{a:1},{a:2}]},"Invalid parse")
         });
     });
 });
