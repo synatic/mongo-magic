@@ -1,6 +1,6 @@
 {
   "name": "@synatic/mongo-magic",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "mongo magic utils",
   "main": "index.js",
   "files": [

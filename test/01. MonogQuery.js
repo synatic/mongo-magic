@@ -299,6 +299,11 @@ describe('Mongo Query', function () {
             assert.deepEqual(MongoQuery.mergeQuery({a:1},{a:2}), {$and:[{a:1},{a:2}]},"Invalid parse")
         });
 
+        it('should merge a query with string', function () {
+            assert.deepEqual(MongoQuery.mergeQuery({a:1},'{"a":2}'), {$and:[{a:1},{a:2}]},"Invalid parse")
+        });
+
+
         it('should merge a query', function () {
             assert.deepEqual(MongoQuery.mergeQuery({a:2},{$and:[{a:1}]}), {$and:[{a:1},{a:2}]},"Invalid parse")
         });
