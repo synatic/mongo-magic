@@ -44,10 +44,10 @@
     "node": ">=12"
   },
   "dependencies": {
-    "check-types": "11.0.0",
+    "check-types": "11.1.2",
     "deepmerge": "4.2.2",
-    "moment": "2.24.0",
-    "mongodb": "3.5.9",
+    "moment": "2.29.1",
+    "mongodb": "^3.6.3",
     "odata-parser": "1.4.1",
     "underscore.string": "3.3.5"
   },
