@@ -6,6 +6,7 @@ const _s = require('underscore.string');
 const {MongoClient} = require('mongodb');
 const Collection = require('../lib').Collection;
 const MongoQuery = require('../lib').MongoQuery;
+const {EJSON} = require('bson');
 
 const config = {
     databaseName: 'mongo-magic-tests',
@@ -127,6 +128,24 @@ describe('Collection', function () {
 
             const mQuery = new MongoQuery({limit: 1000});
             collection.queryAsStream(mQuery).pipe(ws);
+        });
+
+        it('should stream and transform results', function (done) {
+            const collection = new Collection(_db.collection('testquery'));
+            const ws = new stream.Writable({objectMode: true});
+            let writeCnt = 0;
+            ws._write = function (chunk, encoding, done) {
+                writeCnt++;
+                return done();
+            };
+
+            ws.on('finish', function () {
+                assert.strictEqual(writeCnt, 2, 'Invalid writes');
+                return done();
+            });
+
+            const mQuery = new MongoQuery({limit: 1000});
+            collection.queryAsStream(mQuery, {transform: x => EJSON.serialize(x, {})}).pipe(ws);
         });
     });
 
