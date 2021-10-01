@@ -47,7 +47,7 @@
     "check-types": "11.1.2",
     "deepmerge": "4.2.2",
     "moment": "2.29.1",
-    "mongodb": "^3.6.3",
+    "mongodb": "^4.1.2",
     "odata-parser": "1.4.1",
     "underscore.string": "3.3.5"
   },
