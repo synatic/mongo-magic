@@ -11,10 +11,7 @@ const {EJSON} = require('bson');
 const config = {
     databaseName: 'mongo-magic-tests',
     connectionString: 'mongodb://localhost:27017',
-    connectionOptions: {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-    },
+    connectionOptions: {},
 };
 
 let client = null;
