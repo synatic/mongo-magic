@@ -1,7 +1,7 @@
 const assert = require('assert');
 const {ObjectID} = require('mongodb');
 const cloneDeep = require('clone-deep');
-const utils = require('../lib/utils');
+const utils = require('../lib/Utils.js');
 
 describe('Utils', function () {
     it('should validate id', function () {
