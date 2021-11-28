@@ -2,7 +2,7 @@ const assert = require('assert');
 const async = require('async');
 const moment = require('moment');
 const stream = require('stream');
-const _s = require('underscore.string');
+
 const {MongoClient} = require('mongodb');
 const Collection = require('../lib').Collection;
 const MongoQuery = require('../lib').MongoQuery;
@@ -142,7 +142,7 @@ describe('Collection', function () {
             });
 
             const mQuery = new MongoQuery({limit: 1000});
-            collection.queryAsStream(mQuery, {transform: x => EJSON.serialize(x, {})}).pipe(ws);
+            collection.queryAsStream(mQuery, {transform: (x) => EJSON.serialize(x, {})}).pipe(ws);
         });
     });
 
@@ -183,9 +183,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc();
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(
@@ -217,9 +217,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc().subtract(1, 'month');
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(
@@ -251,9 +251,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc();
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(
