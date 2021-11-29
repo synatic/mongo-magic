@@ -2,7 +2,7 @@ const assert = require('assert');
 const async = require('async');
 const moment = require('moment');
 const stream = require('stream');
-const _s = require('underscore.string');
+
 const {MongoClient} = require('mongodb');
 const Collection = require('../lib').Collection;
 const MongoQuery = require('../lib').MongoQuery;
@@ -109,6 +109,28 @@ describe('Collection', function () {
             });
         });
 
+        it('should query document with projection', function (done) {
+            const collection = new Collection(_db.collection('testquery'));
+
+            const mQuery = new MongoQuery({$projection: {val: 1, val2: {$concat: ['$val', '_t']},_id:0}});
+
+            collection.query(mQuery, (err, results) => {
+                assert(!err, 'Has error');
+                assert.deepStrictEqual(results,[
+                    {
+                        "val": "a",
+                        "val2": "a_t"
+                    },
+                    {
+
+                        "val": "b",
+                        "val2": "b_t"
+                    }
+                ],"invalid projection")
+                done();
+            });
+        });
+
         it('should stream results', function (done) {
             const collection = new Collection(_db.collection('testquery'));
             const ws = new stream.Writable({objectMode: true});
@@ -123,7 +145,7 @@ describe('Collection', function () {
                 return done();
             });
 
-            const mQuery = new MongoQuery({limit: 1000});
+            const mQuery = new MongoQuery({$limit: 1000});
             collection.queryAsStream(mQuery).pipe(ws);
         });
 
@@ -142,7 +164,7 @@ describe('Collection', function () {
             });
 
             const mQuery = new MongoQuery({limit: 1000});
-            collection.queryAsStream(mQuery, {transform: x => EJSON.serialize(x, {})}).pipe(ws);
+            collection.queryAsStream(mQuery, {transform: (x) => EJSON.serialize(x, {})}).pipe(ws);
         });
     });
 
@@ -183,9 +205,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc();
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(
@@ -217,9 +239,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc().subtract(1, 'month');
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(
@@ -251,9 +273,9 @@ describe('Collection', function () {
             const date = new Date();
             const momentDate = moment(date).utc();
             const year = momentDate.year();
-            const month = _s.lpad(momentDate.month() + 1, 2, '0');
-            const day = _s.lpad(momentDate.date(), 2, '0');
-            const hour = _s.lpad(momentDate.hour(), 2, '0');
+            const month = (momentDate.month() + 1).toString().padStart(2, '0');
+            const day = momentDate.date().toString().padStart(2, '0');
+            const hour = momentDate.hour().toString().padStart(2, '0');
 
             const collection = new Collection(_db.collection('teststats'));
             collection.updateStats(

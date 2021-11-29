@@ -96,6 +96,13 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a projection', function (done) {
+            const mongoQuery = new MongoQuery('$projection={"field1":1,"field2":1}');
+
+            assert.deepStrictEqual(mongoQuery.parsedQuery.projection, {field1: 1, field2: 1}, 'Invalid Select');
+            done();
+        });
+
         it('should parse a complex select with exclusions', function (done) {
             const mongoQuery = new MongoQuery('$select=-field1,-field2');
 
