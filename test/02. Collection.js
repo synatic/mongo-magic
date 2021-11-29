@@ -109,6 +109,28 @@ describe('Collection', function () {
             });
         });
 
+        it('should query document with projection', function (done) {
+            const collection = new Collection(_db.collection('testquery'));
+
+            const mQuery = new MongoQuery({$projection: {val: 1, val2: {$concat: ['$val', '_t']},_id:0}});
+
+            collection.query(mQuery, (err, results) => {
+                assert(!err, 'Has error');
+                assert.deepStrictEqual(results,[
+                    {
+                        "val": "a",
+                        "val2": "a_t"
+                    },
+                    {
+
+                        "val": "b",
+                        "val2": "b_t"
+                    }
+                ],"invalid projection")
+                done();
+            });
+        });
+
         it('should stream results', function (done) {
             const collection = new Collection(_db.collection('testquery'));
             const ws = new stream.Writable({objectMode: true});
@@ -123,7 +145,7 @@ describe('Collection', function () {
                 return done();
             });
 
-            const mQuery = new MongoQuery({limit: 1000});
+            const mQuery = new MongoQuery({$limit: 1000});
             collection.queryAsStream(mQuery).pipe(ws);
         });
 
