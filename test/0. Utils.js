@@ -460,7 +460,7 @@ describe('Utils', function () {
                 {
                     $out: 'test',
                 },
-            ]),
+            ], false),
             [
                 {
                     $project: {
@@ -569,7 +569,7 @@ describe('Utils', function () {
                 {
                     $out: 'test',
                 },
-            ]),
+            ], false),
             [
                 {
                     $project: {
@@ -652,4 +652,53 @@ describe('Utils', function () {
             'Invalid clean'
         );
     });
+    it('should not throw an error when cleaning an aggregate that has a function that is a substring of an unsafe function', function () {
+        const safePipeline= [
+            {
+                "$match": {
+                    "id": {
+                        "$eq": 1
+                    }
+                }
+            },
+            {
+                "$replaceRoot": {
+                    "newRoot": {
+                        "$mergeObjects": [
+                            "$$ROOT",
+                            {
+                                "FullName": {
+                                    "$concat": [
+                                        "$First Name",
+                                        {
+                                            "$literal": "-"
+                                        },
+                                        "$Last Name"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ];
+        assert.doesNotThrow(()=>{
+            utils.cleanAggregate(safePipeline);
+        });
+    });
+    it('should throw an error if there is an unsafe function when calling clean aggregate',()=>{
+        const unsafePipeline= [
+            {
+                "$merge": {
+                    "id": {
+                        "$eq": 1
+                    }
+                }
+            }
+        ];
+        assert.throws(()=>{
+            utils.cleanAggregate(unsafePipeline);
+        });
+    })
+
 });
