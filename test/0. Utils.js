@@ -411,56 +411,59 @@ describe('Utils', function () {
 
     it('should clean aggregate', function () {
         assert.deepStrictEqual(
-            utils.cleanAggregate([
-                {
-                    $project: {
-                        c: '$$ROOT',
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'customer-notes',
-                        as: 'cn',
-                        localField: 'c.id',
-                        foreignField: 'id',
-                    },
-                },
-                {
-                    $match: {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: '$cn',
-                                },
-                                0,
-                            ],
+            utils.cleanAggregate(
+                [
+                    {
+                        $project: {
+                            c: '$$ROOT',
                         },
                     },
-                },
-                {
-                    $lookup: {
-                        from: 'customer-notes2',
-                        as: 'cn2',
-                        localField: 'c.id',
-                        foreignField: 'id',
-                    },
-                },
-                {
-                    $match: {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: '$cn2',
-                                },
-                                0,
-                            ],
+                    {
+                        $lookup: {
+                            from: 'customer-notes',
+                            as: 'cn',
+                            localField: 'c.id',
+                            foreignField: 'id',
                         },
                     },
-                },
-                {
-                    $out: 'test',
-                },
-            ], false),
+                    {
+                        $match: {
+                            $expr: {
+                                $gt: [
+                                    {
+                                        $size: '$cn',
+                                    },
+                                    0,
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'customer-notes2',
+                            as: 'cn2',
+                            localField: 'c.id',
+                            foreignField: 'id',
+                        },
+                    },
+                    {
+                        $match: {
+                            $expr: {
+                                $gt: [
+                                    {
+                                        $size: '$cn2',
+                                    },
+                                    0,
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $out: 'test',
+                    },
+                ],
+                false
+            ),
             [
                 {
                     $project: {
@@ -512,64 +515,67 @@ describe('Utils', function () {
         );
 
         assert.deepStrictEqual(
-            utils.cleanAggregate([
-                {
-                    $project: {
-                        c: '$$ROOT',
+            utils.cleanAggregate(
+                [
+                    {
+                        $project: {
+                            c: '$$ROOT',
+                        },
                     },
-                },
-                {
-                    $lookup: {
-                        from: 'customer-notes',
-                        as: 'cn',
-                        localField: 'c.id',
-                        foreignField: 'id',
-                        pipeline: [
-                            {
-                                $project: {
-                                    c: '$$ROOT',
+                    {
+                        $lookup: {
+                            from: 'customer-notes',
+                            as: 'cn',
+                            localField: 'c.id',
+                            foreignField: 'id',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        c: '$$ROOT',
+                                    },
                                 },
+                                {$out: 'test'},
+                            ],
+                        },
+                    },
+                    {
+                        $match: {
+                            $expr: {
+                                $gt: [
+                                    {
+                                        $size: '$cn',
+                                    },
+                                    0,
+                                ],
                             },
-                            {$out: 'test'},
-                        ],
-                    },
-                },
-                {
-                    $match: {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: '$cn',
-                                },
-                                0,
-                            ],
                         },
                     },
-                },
-                {
-                    $lookup: {
-                        from: 'customer-notes2',
-                        as: 'cn2',
-                        localField: 'c.id',
-                        foreignField: 'id',
-                    },
-                },
-                {
-                    $match: {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: '$cn2',
-                                },
-                                0,
-                            ],
+                    {
+                        $lookup: {
+                            from: 'customer-notes2',
+                            as: 'cn2',
+                            localField: 'c.id',
+                            foreignField: 'id',
                         },
                     },
-                },
-                {
-                    $out: 'test',
-                },
-            ], false),
+                    {
+                        $match: {
+                            $expr: {
+                                $gt: [
+                                    {
+                                        $size: '$cn2',
+                                    },
+                                    0,
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $out: 'test',
+                    },
+                ],
+                false
+            ),
             [
                 {
                     $project: {
@@ -653,52 +659,51 @@ describe('Utils', function () {
         );
     });
     it('should not throw an error when cleaning an aggregate that has a function that is a substring of an unsafe function', function () {
-        const safePipeline= [
+        const safePipeline = [
             {
-                "$match": {
-                    "id": {
-                        "$eq": 1
-                    }
-                }
+                $match: {
+                    id: {
+                        $eq: 1,
+                    },
+                },
             },
             {
-                "$replaceRoot": {
-                    "newRoot": {
-                        "$mergeObjects": [
-                            "$$ROOT",
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            '$$ROOT',
                             {
-                                "FullName": {
-                                    "$concat": [
-                                        "$First Name",
+                                FullName: {
+                                    $concat: [
+                                        '$First Name',
                                         {
-                                            "$literal": "-"
+                                            $literal: '-',
                                         },
-                                        "$Last Name"
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
+                                        '$Last Name',
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
         ];
-        assert.doesNotThrow(()=>{
+        assert.doesNotThrow(() => {
             utils.cleanAggregate(safePipeline);
         });
     });
-    it('should throw an error if there is an unsafe function when calling clean aggregate',()=>{
-        const unsafePipeline= [
+    it('should throw an error if there is an unsafe function when calling clean aggregate', () => {
+        const unsafePipeline = [
             {
-                "$merge": {
-                    "id": {
-                        "$eq": 1
-                    }
-                }
-            }
+                $merge: {
+                    id: {
+                        $eq: 1,
+                    },
+                },
+            },
         ];
-        assert.throws(()=>{
+        assert.throws(() => {
             utils.cleanAggregate(unsafePipeline);
         });
-    })
-
+    });
 });
