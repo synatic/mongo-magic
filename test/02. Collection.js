@@ -205,7 +205,7 @@ describe('Collection', function () {
         });
 
         it('should update stats', function (done) {
-            const date = new Date();
+            const date = new Date('2022-05-04');
             const momentDate = moment(date).utc();
             const year = momentDate.year();
             const month = (momentDate.month() + 1).toString().padStart(2, '0');
@@ -216,7 +216,7 @@ describe('Collection', function () {
             collection.updateStats(
                 {
                     statsField: 'stats1',
-                    date: new Date(),
+                    date: momentDate.toDate(),
                     query: {val: 'a'},
                     increments: {
                         field: 'counter',
@@ -239,7 +239,7 @@ describe('Collection', function () {
         });
 
         it('should update stats at a different date', function (done) {
-            const date = new Date();
+            const date = new Date('2022-05-04');
             const momentDate = moment(date).utc().subtract(1, 'month');
             const year = momentDate.year();
             const month = (momentDate.month() + 1).toString().padStart(2, '0');

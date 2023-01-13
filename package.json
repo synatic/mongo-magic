@@ -1,6 +1,6 @@
 {
   "name": "@synatic/mongo-magic",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "mongo magic utils",
   "main": "index.js",
   "files": [
@@ -45,10 +45,10 @@
   },
   "dependencies": {
     "@synatic/json-magic": "^1.0.0",
-    "check-types": "11.1.2",
+    "check-types": "11.2.2",
     "deepmerge": "4.2.2",
     "moment": "2.29.4",
-    "mongodb": "^4.4.1",
+    "mongodb": "^4.13.0",
     "odata-parser": "1.4.1"
   },
   "devDependencies": {
