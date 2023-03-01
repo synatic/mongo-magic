@@ -48,7 +48,7 @@
     "check-types": "11.2.2",
     "deepmerge": "4.2.2",
     "moment": "2.29.4",
-    "mongodb": "^4.13.0",
+    "mongodb": "^5.1.0",
     "odata-parser": "1.4.1"
   },
   "devDependencies": {
