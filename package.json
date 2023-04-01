@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "async": "^3.2.3",
-    "bson": "^4.6.1",
+    "bson": "^5.1.0",
     "clone-deep": "^4.0.1",
     "eslint": "^8.11.0",
     "eslint-config-google": "^0.14.0",
