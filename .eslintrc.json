@@ -5,9 +5,9 @@
     "es6": true,
     "mocha": true
   },
+  "parserOptions": { "ecmaVersion": 2018 },
   "extends": ["eslint:recommended", "google", "prettier"],
   "globals": {},
-  "parserOptions": {},
   "rules": {
     "indent": ["error", 4, {"SwitchCase": 1}],
     "max-len": ["off"],

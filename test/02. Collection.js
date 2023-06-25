@@ -1,5 +1,4 @@
 const assert = require('assert');
-const async = require('async');
 const moment = require('moment');
 const stream = require('stream');
 
@@ -19,55 +18,22 @@ let _db = null;
 
 describe('Collection', function () {
     this.timeout(30000);
-    before(function (done) {
-        async.waterfall(
-            [
-                (cb) => {
-                    client = new MongoClient(config.connectionString, config.connectionOptions);
+    before(async function () {
+        client = await MongoClient.connect(config.connectionString, config.connectionOptions);
 
-                    client.connect(function (err) {
-                        if (err) {
-                            return cb(err);
-                        }
+        _db = client.db(config.databaseName);
 
-                        cb();
-                    });
-                },
-                (cb) => {
-                    _db = client.db(config.databaseName);
+        const collections = await _db.collections();
 
-                    _db.collections(function (err, collections) {
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        async.each(
-                            collections,
-                            function (item, itemCallback) {
-                                item.deleteMany({}, itemCallback);
-                            },
-                            function (err) {
-                                cb(err);
-                            }
-                        );
-                    });
-                },
-            ],
-            function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                done(err);
-            }
-        );
+        for (const collection of collections) {
+            await collection.deleteMany({});
+        }
     });
 
-    after(function (done) {
+    after(async function () {
         if (client) {
-            client.close();
+            await client.close();
         }
-
-        done();
     });
 
     it('should throw an error when no config specified', function (done) {
@@ -82,8 +48,8 @@ describe('Collection', function () {
     });
 
     describe('Query', function () {
-        before(function (done) {
-            _db.collection('testquery').insertMany(
+        before(async function () {
+            await _db.collection('testquery').insertMany(
                 [
                     {
                         val: 'a',
@@ -91,18 +57,25 @@ describe('Collection', function () {
                     {
                         val: 'b',
                     },
-                ],
-                function (err) {
-                    return done(err);
-                }
-            );
+                ]);
+        });
+
+        it('should count the documents - old', function (done) {
+            const collection = new Collection(_db.collection('testquery'));
+
+            const mQuery = new MongoQuery({});
+            collection.count(mQuery, function (err, count) {
+                assert(!err, 'Error Occurred');
+                assert.strictEqual(count, 2, 'Invalid count');
+                done();
+            });
         });
 
         it('should count the documents', function (done) {
             const collection = new Collection(_db.collection('testquery'));
 
             const mQuery = new MongoQuery({});
-            collection.count(mQuery, function (err, count) {
+            collection.countDocuments(mQuery, function (err, count) {
                 assert(!err, 'Error Occurred');
                 assert.strictEqual(count, 2, 'Invalid count');
                 done();
@@ -172,8 +145,8 @@ describe('Collection', function () {
     });
 
     describe('Stats', function () {
-        before(function (done) {
-            _db.collection('teststats').insertMany(
+        before(async function () {
+            await _db.collection('teststats').insertMany(
                 [
                     {
                         val: 'a',
@@ -181,11 +154,7 @@ describe('Collection', function () {
                     {
                         val: 'b',
                     },
-                ],
-                function (err) {
-                    return done(err);
-                }
-            );
+                ]);
         });
 
         it('should throw an error on invalid config 1', function (done) {
@@ -225,15 +194,14 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'a'}, function (err, result) {
-                        assert(!err, 'Error Occurred');
+                    _db.collection('teststats').findOne({val: 'a'}).then(function (result) {
                         assert.strictEqual(result.stats1.counter, 1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year].counter, 1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month].counter, 1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month][day].counter, 1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month][day][hour].counter, 1, 'Invalid stats value');
                         return done();
-                    });
+                    }).catch(done);
                 }
             );
         });
@@ -259,15 +227,14 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'a'}, function (err, result) {
-                        assert(!err, 'Error Occurred');
+                    _db.collection('teststats').findOne({val: 'a'}).then( function (result) {
                         assert.strictEqual(result.stats1.counter, 11, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year].counter, 11, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month].counter, 10, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month][day].counter, 10, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month][day][hour].counter, 10, 'Invalid stats value');
                         return done();
-                    });
+                    }).catch(done);
                 }
             );
         });
@@ -299,8 +266,7 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'b'}, function (err, result) {
-                        assert(!err, 'Error Occurred');
+                    _db.collection('teststats').findOne({val: 'b'}).then(function (result) {
                         assert.strictEqual(result.stats1.counter1, -1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year].counter1, -1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month].counter1, -1, 'Invalid stats value');
@@ -312,7 +278,7 @@ describe('Collection', function () {
                         assert.strictEqual(result.stats1[year][month][day].counter2, 1, 'Invalid stats value');
                         assert.strictEqual(result.stats1[year][month][day][hour].counter2, 1, 'Invalid stats value');
                         return done();
-                    });
+                    }).catch(done);
                 }
             );
         });

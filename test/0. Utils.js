@@ -1,20 +1,20 @@
 const assert = require('assert');
-const {ObjectID} = require('mongodb');
+const {ObjectId} = require('mongodb');
 const cloneDeep = require('clone-deep');
 const utils = require('../lib/Utils.js');
 
 describe('Utils', function () {
     it('should validate id', function () {
-        assert(utils.isValidId(new ObjectID()), 'Invalid valid');
-        assert(utils.isValidId(new ObjectID().toString()), 'Invalid valid');
-        assert(utils.isValidId(cloneDeep(new ObjectID())), 'Invalid valid');
+        assert(utils.isValidId(new ObjectId()), 'Invalid valid');
+        assert(utils.isValidId(new ObjectId().toString()), 'Invalid valid');
+        assert(utils.isValidId(cloneDeep(new ObjectId())), 'Invalid valid');
         assert(!utils.isValidId(null), 'Invalid valid');
         assert(!utils.isValidId('xxx'), 'Invalid valid');
         assert(!utils.isValidId({a: 1}), 'Invalid valid');
     });
 
     it('should parse id', function () {
-        const objId = new ObjectID();
+        const objId = new ObjectId();
 
         assert.strictEqual(utils.parseId(objId.toString()).toString(), objId.toString(), 'Invalid parse');
         assert.strictEqual(utils.parseId(objId).toString(), objId.toString(), 'Invalid parse');

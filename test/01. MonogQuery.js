@@ -1,15 +1,11 @@
 const assert = require('assert');
-const async = require('async');
 const {MongoClient, ObjectId} = require('mongodb');
 const MongoQuery = require('../lib').MongoQuery;
 
 const config = {
     databaseName: 'mongo-magic-tests',
     connectionString: 'mongodb://localhost:27017',
-    connectionOptions: {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-    },
+    connectionOptions: {},
 };
 
 let client = null;
@@ -17,56 +13,22 @@ let _db = null;
 
 describe('Mongo Query', function () {
     this.timeout(30000);
-    before(function (done) {
-        async.waterfall(
-            [
-                (cb) => {
-                    client = new MongoClient(config.connectionString, config.connectionOptions);
+    before(async function () {
+        client = await MongoClient.connect(config.connectionString, config.connectionOptions);
 
-                    client.connect(function (err) {
-                        if (err) {
-                            return cb(err);
-                        }
+        _db = client.db(config.databaseName);
 
-                        cb();
-                    });
-                },
-                (cb) => {
-                    _db = client.db(config.databaseName);
+        const collections = await _db.collections();
 
-                    _db.collections(function (err, collections) {
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        async.each(
-                            collections,
-                            function (item, itemCallback) {
-                                item.deleteMany({}, itemCallback);
-                            },
-                            function (err) {
-                                cb(err);
-                            }
-                        );
-                    });
-                },
-            ],
-            function (err) {
-                if (err) {
-                    console.log(err);
-                }
-
-                done(err);
-            }
-        );
+        for (const collection of collections) {
+            await collection.deleteMany({});
+        }
     });
 
-    after(function (done) {
+    after(async function () {
         if (client) {
-            client.close();
+            await client.close();
         }
-
-        done();
     });
 
     describe('Query', function () {
