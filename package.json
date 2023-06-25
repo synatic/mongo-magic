@@ -50,7 +50,6 @@
     "odata-parser": "1.4.1"
   },
   "devDependencies": {
-    "async": "^3.2.3",
     "bson": "^5.3.0",
     "clone-deep": "^4.0.1",
     "eslint": "^8.11.0",

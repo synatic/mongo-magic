@@ -1,5 +1,4 @@
 const assert = require('assert');
-const async = require('async');
 const {MongoClient, ObjectId} = require('mongodb');
 const MongoQuery = require('../lib').MongoQuery;
 
