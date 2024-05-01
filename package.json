@@ -54,7 +54,7 @@
     "clone-deep": "^4.0.1",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^8.10.0",
+    "eslint-config-prettier": "^9.1.0",
     "mocha": "^10.4.0",
     "nyc": "^15.1.0",
     "prettier": "^3.2.5"
