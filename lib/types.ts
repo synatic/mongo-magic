@@ -20,6 +20,11 @@ export interface Query<TSchema extends Document> {
      * */
     $orderBy?: string;
     /**
+     * @deprecated incorrect spelling of $orderBy, will be removed in future
+     * @alias $orderBy
+     * */
+    $ordery?: string;
+    /**
      * $orderBy takes priority over $sort, see it for docs
      * @alias $orderBy
      */
