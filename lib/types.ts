@@ -18,15 +18,10 @@ export interface Query<TSchema extends Document> {
      *      $orderBy: "+name,-description,price desc,date asc,index"
      * }
      * */
-    $orderBy?: string;
+    $orderby?: string;
     /**
-     * @deprecated incorrect spelling of $orderBy, will be removed in future
-     * @alias $orderBy
-     * */
-    $ordery?: string;
-    /**
-     * $orderBy takes priority over $sort, see it for docs
-     * @alias $orderBy
+     * $orderby takes priority over $sort, see it for docs
+     * @alias $orderby
      */
     $sort?: string;
     /**
