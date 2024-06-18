@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongo:
-        image: mongo:6.0
+        image: mongo:7.0
         options: >-
           --health-cmd mongosh
           --health-interval 10s
