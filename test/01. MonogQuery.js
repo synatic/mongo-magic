@@ -147,6 +147,19 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a raw query with regularExpression in \'$in\' array', function (done) {
+            const mongoQuery = new MongoQuery({$rawQuery: {
+                field: {$in: [
+                    {$regularExpression: { pattern: ';', options: 'i' }},
+                    {$regularExpression: { pattern: '/', options: 'i' }}
+                ]}}
+            });
+
+            assert(mongoQuery.parsedQuery.query.field.$in[0] instanceof RegExp, 'Invalid parsed $in RegExp query');
+            assert(mongoQuery.parsedQuery.query.field.$in[1] instanceof RegExp, 'Invalid parsed $in RegExp query');
+            done();
+        });
+
         it('should parse a raw query with int', function (done) {
             const mongoQuery = new MongoQuery({$rawQuery: {'field1.field2': {$float: '1.2'}}});
 
