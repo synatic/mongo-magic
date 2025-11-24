@@ -202,6 +202,17 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should throw an error on a raw query with invalid objectId', function (done) {
+            assert.throws(
+                function () {
+                    new MongoQuery({$rawQuery: {'field1.field2': {$objectId: 'invalid-object-id'}}});
+                },
+                Error,
+                'No error thrown'
+            );
+            done();
+        });
+
         it('should parse a raw query with string', function (done) {
             const mongoQuery = new MongoQuery({$rawQuery: {'field1.field2': {$string: 123}}});
 
