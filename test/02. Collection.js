@@ -10,7 +10,9 @@ const {EJSON} = require('bson');
 const config = {
     databaseName: 'mongo-magic-tests',
     connectionString: 'mongodb://localhost:27017',
-    connectionOptions: {},
+    connectionOptions: {
+        directConnection: true,
+    },
 };
 
 let client = null;
@@ -49,15 +51,14 @@ describe('Collection', function () {
 
     describe('Query', function () {
         before(async function () {
-            await _db.collection('testquery').insertMany(
-                [
-                    {
-                        val: 'a',
-                    },
-                    {
-                        val: 'b',
-                    },
-                ]);
+            await _db.collection('testquery').insertMany([
+                {
+                    val: 'a',
+                },
+                {
+                    val: 'b',
+                },
+            ]);
         });
 
         it('should count the documents - old', function (done) {
@@ -146,15 +147,14 @@ describe('Collection', function () {
 
     describe('Stats', function () {
         before(async function () {
-            await _db.collection('teststats').insertMany(
-                [
-                    {
-                        val: 'a',
-                    },
-                    {
-                        val: 'b',
-                    },
-                ]);
+            await _db.collection('teststats').insertMany([
+                {
+                    val: 'a',
+                },
+                {
+                    val: 'b',
+                },
+            ]);
         });
 
         it('should throw an error on invalid config 1', function (done) {
@@ -194,14 +194,17 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'a'}).then(function (result) {
-                        assert.strictEqual(result.stats1.counter, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year].counter, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month].counter, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day].counter, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day][hour].counter, 1, 'Invalid stats value');
-                        return done();
-                    }).catch(done);
+                    _db.collection('teststats')
+                        .findOne({val: 'a'})
+                        .then(function (result) {
+                            assert.strictEqual(result.stats1.counter, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year].counter, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month].counter, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day].counter, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day][hour].counter, 1, 'Invalid stats value');
+                            return done();
+                        })
+                        .catch(done);
                 }
             );
         });
@@ -227,14 +230,17 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'a'}).then( function (result) {
-                        assert.strictEqual(result.stats1.counter, 11, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year].counter, 11, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month].counter, 10, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day].counter, 10, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day][hour].counter, 10, 'Invalid stats value');
-                        return done();
-                    }).catch(done);
+                    _db.collection('teststats')
+                        .findOne({val: 'a'})
+                        .then(function (result) {
+                            assert.strictEqual(result.stats1.counter, 11, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year].counter, 11, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month].counter, 10, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day].counter, 10, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day][hour].counter, 10, 'Invalid stats value');
+                            return done();
+                        })
+                        .catch(done);
                 }
             );
         });
@@ -266,19 +272,22 @@ describe('Collection', function () {
                 },
                 function (err) {
                     assert(!err, 'Error Occurred');
-                    _db.collection('teststats').findOne({val: 'b'}).then(function (result) {
-                        assert.strictEqual(result.stats1.counter1, -1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year].counter1, -1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month].counter1, -1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day].counter1, -1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day][hour].counter1, -1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1.counter2, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year].counter2, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month].counter2, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day].counter2, 1, 'Invalid stats value');
-                        assert.strictEqual(result.stats1[year][month][day][hour].counter2, 1, 'Invalid stats value');
-                        return done();
-                    }).catch(done);
+                    _db.collection('teststats')
+                        .findOne({val: 'b'})
+                        .then(function (result) {
+                            assert.strictEqual(result.stats1.counter1, -1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year].counter1, -1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month].counter1, -1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day].counter1, -1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day][hour].counter1, -1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1.counter2, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year].counter2, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month].counter2, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day].counter2, 1, 'Invalid stats value');
+                            assert.strictEqual(result.stats1[year][month][day][hour].counter2, 1, 'Invalid stats value');
+                            return done();
+                        })
+                        .catch(done);
                 }
             );
         });

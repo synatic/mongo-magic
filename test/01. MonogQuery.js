@@ -5,7 +5,9 @@ const MongoQuery = require('../lib').MongoQuery;
 const config = {
     databaseName: 'mongo-magic-tests',
     connectionString: 'mongodb://localhost:27017',
-    connectionOptions: {},
+    connectionOptions: {
+        directConnection: true,
+    },
 };
 
 let client = null;
@@ -147,12 +149,11 @@ describe('Mongo Query', function () {
             done();
         });
 
-        it('should parse a raw query with regularExpression in \'$in\' array', function (done) {
-            const mongoQuery = new MongoQuery({$rawQuery: {
-                field: {$in: [
-                    {$regularExpression: { pattern: ';', options: 'i' }},
-                    {$regularExpression: { pattern: '/', options: 'i' }}
-                ]}}
+        it("should parse a raw query with regularExpression in '$in' array", function (done) {
+            const mongoQuery = new MongoQuery({
+                $rawQuery: {
+                    field: {$in: [{$regularExpression: {pattern: ';', options: 'i'}}, {$regularExpression: {pattern: '/', options: 'i'}}]},
+                },
             });
 
             assert(mongoQuery.parsedQuery.query.field.$in[0] instanceof RegExp, 'Invalid parsed $in RegExp query');

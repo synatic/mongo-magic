@@ -1,6 +1,6 @@
 {
   "name": "@synatic/mongo-magic",
-  "version": "2.3.5",
+  "version": "3.0.0",
   "description": "Synatic utility classes for interacting with MongoDB",
   "main": "index.js",
   "files": [
@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "lint-errors": "eslint . --quiet",
     "prettier": "prettier . --write",
     "test": "mocha --reporter spec --bail --check-leaks test/",
     "test-ci": "nyc --reporter text-summary mocha -- --reporter spec --check-leaks test/",
@@ -39,24 +41,28 @@
   },
   "homepage": "https://github.com/synatic/mongo-magic#readme",
   "engines": {
-    "node": ">=16"
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
   },
   "dependencies": {
-    "@synatic/json-magic": "^1.0.0",
+    "@synatic/json-magic": "^2.0.1",
     "check-types": "11.2.3",
     "deepmerge": "4.3.1",
     "moment": "2.30.1",
-    "mongodb": "^6.5.0",
+    "mongodb": "^7.1.1",
     "odata-parser": "1.4.1"
   },
   "devDependencies": {
-    "bson": "^6.6.0",
+    "@eslint/js": "10.0.1",
+    "bson": "^7.2.0",
     "clone-deep": "^4.0.1",
-    "eslint": "^8.57.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^8.10.0",
-    "mocha": "^10.4.0",
-    "nyc": "^15.1.0",
-    "prettier": "^3.2.5"
+    "eslint": "10.1.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-jsdoc": "^62.8.1",
+    "eslint-plugin-prettier": "5.5.5",
+    "globals": "^17.4.0",
+    "mocha": "^12.0.0-beta-10",
+    "nyc": "^18.0.0",
+    "prettier": "^3.8.1"
   }
 }
