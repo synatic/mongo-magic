@@ -3,7 +3,7 @@ name: "NPM Publish"
 on:
   release:
     types: [created]
-      
+
 permissions:
   id-token: write
   contents: read
@@ -14,12 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongo:
-        image: mongo:7.0
-        options: >-
-          --health-cmd mongosh
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        image: mongodb/mongodb-atlas-local:8.0
+        env:
+          DO_NOT_TRACK: 1
         ports:
           - 27017:27017
 
