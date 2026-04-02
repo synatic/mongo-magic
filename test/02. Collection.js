@@ -5,7 +5,7 @@ const stream = require('stream');
 const {MongoClient} = require('mongodb');
 const Collection = require('../lib').Collection;
 const MongoQuery = require('../lib').MongoQuery;
-const {EJSON} = require('bson');
+const {EJSON, ObjectId} = require('bson');
 
 const config = {
     databaseName: 'mongo-magic-tests',
@@ -28,7 +28,9 @@ describe('Collection', function () {
         const collections = await _db.collections();
 
         for (const collection of collections) {
-            await collection.deleteMany({});
+            if (!collection.collectionName.startsWith('system.')) {
+                await collection.deleteMany({});
+            }
         }
     });
 
@@ -143,6 +145,27 @@ describe('Collection', function () {
             const mQuery = new MongoQuery({limit: 1000});
             collection.queryAsStream(mQuery, {transform: (x) => EJSON.serialize(x, {})}).pipe(ws);
         });
+
+        it('should apply a transform on documents if one is provided', function (done) {
+            const collection = new Collection(_db.collection('testquery'));
+            const ws = new stream.Writable({objectMode: true});
+            let writeCnt = 0 ;
+
+            ws._write = function (chunk, encoding, done) {
+                writeCnt++;
+                assert.strictEqual(ObjectId.isValid(chunk._id.$oid), true, 'Document was not transformed')
+                return done();
+            };
+
+            ws.on('finish', function () {
+                assert.strictEqual(writeCnt, 2, 'Invalid writes');
+                return done();
+            });
+
+            const mQuery = new MongoQuery({limit: 1000});
+            collection.queryAsStream(mQuery, {}, {transform: (x) => EJSON.serialize(x, {})}).pipe(ws);
+        })
+
     });
 
     describe('Stats', function () {
