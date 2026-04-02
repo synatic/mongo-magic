@@ -23,7 +23,9 @@ describe('Mongo Query', function () {
         const collections = await _db.collections();
 
         for (const collection of collections) {
-            await collection.deleteMany({});
+            if (!collection.collectionName.startsWith('system.')) {
+                await collection.deleteMany({});
+            }
         }
     });
 
