@@ -1,6 +1,6 @@
 {
   "name": "@synatic/mongo-magic",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Synatic utility classes for interacting with MongoDB",
   "main": "index.js",
   "files": [
