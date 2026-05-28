@@ -24,8 +24,10 @@ jobs:
           - 27017:27017
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
@@ -33,10 +35,10 @@ jobs:
       # script could steal NODE_AUTH_TOKEN.
       - name: Install NPM dependencies
         run: npm install --ignore-scripts
-
+      - name: Audit packages
+        run: npm audit --audit-level=high --omit=dev
       - name: Run linting
         run: npm run lint
-
       - name: Run tests
         run: npm run test-ci
 
@@ -46,8 +48,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
@@ -55,6 +59,5 @@ jobs:
       # script could steal NODE_AUTH_TOKEN.
       - name: Install NPM dependencies
         run: npm install --ignore-scripts --production
-
       - name: Run NPM pack
         run: npm pack
