@@ -295,6 +295,109 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a contains', function (done) {
+
+            const mongoQuery = new MongoQuery("$filter=contains(Servers, 'nginx')");
+
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    Servers:{$regex:'nginx', $options:'i'},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse a contains with subproperty', function (done) {
+
+            const mongoQuery = new MongoQuery("$filter=contains(User/Name, 'Jef')");
+
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    'User.Name':{$regex:'Jef', $options:'i'},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse a startswith', function (done) {
+            const mongoQuery = new MongoQuery("$filter=startswith(Name, 'Jef')");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    Name: {$regex: '^Jef', $options: 'i'},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse an endswith', function (done) {
+            const mongoQuery = new MongoQuery("$filter=endswith(Name, 'f')");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    Name: {$regex: 'f$', $options: 'i'},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse a substringof', function (done) {
+            const mongoQuery = new MongoQuery("$filter=substringof('Jef', Name)");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    Name: {$regex: 'Jef', $options: 'i'},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse tolower', function (done) {
+            const mongoQuery = new MongoQuery("$filter=tolower(Name) eq 'jef'");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    $expr: {$eq: [{$toLower: '$Name'}, 'jef']},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse toupper', function (done) {
+            const mongoQuery = new MongoQuery("$filter=toupper(Name) eq 'JEF'");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    $expr: {$eq: [{$toUpper: '$Name'}, 'JEF']},
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
+        it('should parse tolower and a normal query', function (done) {
+            const mongoQuery = new MongoQuery("$filter=tolower(Name) eq 'jef' and Status eq 'active'");
+            assert.deepStrictEqual(
+                mongoQuery.parsedQuery.query,
+                {
+                    $and: [
+                        {$expr: {$eq: [{$toLower: '$Name'}, 'jef']}},
+                        {Status: 'active'},
+                    ],
+                },
+                'Invalid Query'
+            );
+            done();
+        });
+
         it('should parse a raw query and filter with a array', function (done) {
             const objectId = new ObjectId();
             const mongoQuery = new MongoQuery('$rawQuery={"$and":[{"field2":"x"}],"field1":{"$date":"2016-01-01T00:00:00Z"}}', {
