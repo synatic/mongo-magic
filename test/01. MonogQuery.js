@@ -105,6 +105,13 @@ describe('Mongo Query', function () {
             done();
         });
 
+        it('should parse a filter with a dotted field', function (done) {
+            const mongoQuery = new MongoQuery("$filter=field1.field2 eq 'a'");
+
+            assert.deepStrictEqual(mongoQuery.parsedQuery.query, {'field1.field2': 'a'}, 'Invalid Filter');
+            done();
+        });
+
         it('should parse a raw query', function (done) {
             const mongoQuery = new MongoQuery('$rawQuery={"field1.field2":{"$date":"2016-01-01T00:00:00Z"}}');
 

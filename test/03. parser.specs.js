@@ -63,11 +63,24 @@ describe('odata.parser grammar', function () {
         assert.equal(ast.$select[0], 'r');
     });
 
+    it('should accept dotted fields in $select', function () {
+        let ast = parser.parse('$select=User.Name,Rating');
+
+        assert.equal(ast.$select[0], 'User.Name');
+        assert.equal(ast.$select[1], 'Rating');
+    });
+
     it('should parse order by', function () {
         let ast = parser.parse('$orderby=ReleaseDate desc, Rating');
 
         assert.equal(ast.$orderby[0].ReleaseDate, 'desc');
         assert.equal(ast.$orderby[1].Rating, 'asc');
+    });
+
+    it('should parse order by with dotted fields', function () {
+        let ast = parser.parse('$orderby=User.ReleaseDate desc');
+
+        assert.equal(ast.$orderby[0]['User.ReleaseDate'], 'desc');
     });
 
     it('should parse $filter', function () {
@@ -116,6 +129,28 @@ describe('odata.parser grammar', function () {
         assert.equal(ast.$filter.left.name, 'User/Name');
         assert.equal(ast.$filter.right.type, 'literal');
         assert.equal(ast.$filter.right.value, 'Jef');
+    });
+
+    it('should parse $filter with dotted subproperty', function () {
+        let ast = parser.parse("$filter=flow._id eq 'Jef'");
+        assert.equal(ast.$filter.type, 'eq');
+        assert.equal(ast.$filter.left.type, 'property');
+        assert.equal(ast.$filter.left.name, 'flow._id');
+        assert.equal(ast.$filter.right.type, 'literal');
+        assert.equal(ast.$filter.right.value, 'Jef');
+    });
+
+    it('should parse $filter with multiple dotted subproperties', function () {
+        let ast = parser.parse('$filter=a.b.c eq 1');
+        assert.equal(ast.$filter.left.type, 'property');
+        assert.equal(ast.$filter.left.name, 'a.b.c');
+    });
+
+    it('should parse substringof $filter with dotted subproperty', function () {
+        let ast = parser.parse("$filter=substringof('nginx', User.Data)");
+        assert.equal(ast.$filter.type, 'functioncall');
+        assert.equal(ast.$filter.args[1].type, 'property');
+        assert.equal(ast.$filter.args[1].name, 'User.Data');
     });
 
     it('should parse multiple conditions in a $filter', function () {
